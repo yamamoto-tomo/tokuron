@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator'
 import { z, createRoute, OpenAPIHono} from '@hono/zod-openapi'
 import { swaggerUI } from '@hono/swagger-ui'
 
-// const app = new OpenAPIHono()
+const app = new OpenAPIHono()
 
 
 app.doc('/doc', {
