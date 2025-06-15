@@ -5,6 +5,20 @@ import { swaggerUI } from '@hono/swagger-ui'
 
 const app = new OpenAPIHono()
 
+app.get('/github-models', async (c) => {
+  const apiUrl = 'https://models.github.ai/inference/chat/completions'
+  const headers = {
+    'Authorization': `Bearer ${c.env.GITHUB_TOKEN}`,
+    'Content-Type': 'application/json'
+  }
+  const body = JSON.stringify({
+    messages: [{role: 'user', content: '生成AIを用いたコーディング手法とは？'}],
+    model: 'openai/gpt-4.1'
+  })
+  const response = await fetch(apiUrl, {method: 'POST', headers, body})
+  const data = await response.json()
+  return c.text(data.choices[0].message.content)
+})
 
 app.doc('/doc', {
   info:{
