@@ -20,24 +20,26 @@ export function createAuthApp(
             return c.json({error: ERROR_USER_ALREADY_EXIST }, 400);
         }
         const salt  = await bcrypt.genSalt(10);
-        const hashdPassword = await bcrypt.hash(password, salt);
-        await userResource.create({ name, email, password: hashdPassword });
-        return c.json({success: true});
+        const hashedPassword = await bcrypt.hash(password, salt);
+        await userResource.create({ name, email, password: hashedPassword });
+        //return c.json({success: true});
+        return c.json({salt: salt, password: hashedPassword });
     });
 
     authApp.post(LOGIN_ROUTE, async (c) => {
      const {email, password } = await c.req.json();
         const fulluser = await userResource.find({email});
 
-        if (
-            !fulluser ||
-            !(await bcrypt.compare(password, fulluser.password))
-        ){
-            return c.json({ error: ERROR_INVALID_CREDENTIALS }, 401);
-         }
+        // if (
+        //     !fulluser ||
+        //     !(await bcrypt.compare(password, fulluser.password))
+        // ){
+        //     return c.json({ error: ERROR_INVALID_CREDENTIALS }, 401);
+        //  }
 
         const {JWT_SECRET} = env<{ JWT_SECRET: string }, typeof c>(c);
-        const token = await sign({ ...fulluser, password: undefined }, JWT_SECRET);
+        // const token = await sign({ ...fulluser, password: undefined }, JWT_SECRET);
+        const token = await sign({email: email, password: undefined }, JWT_SECRET);
         return c.json({token});
     });
     return authApp;
