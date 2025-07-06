@@ -21,6 +21,14 @@
   //     "bucket_name": "my-bucket"
   //   }
   // ],
+
+"d1_databases": [
+  {
+    "binding": "DB",
+    "database_name": "tokurondb",
+    "database_id": "f36ba857-4e72-46d9-b449-62c47617076c"
+  }
+],
   // "d1_databases": [
   //   {
   //     "binding": "MY_DB",
@@ -31,6 +39,7 @@
   // "ai": {
   //   "binding": "AI"
   // },
+
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
