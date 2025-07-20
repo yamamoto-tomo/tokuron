@@ -1,3 +1,4 @@
-import { createInMemoryApp } from "./controllers/main";
-const app = createInMemoryApp();
+import {createSQLApp} from"./controllers/main";
+const app = createSQLApp();
+
 export default app;

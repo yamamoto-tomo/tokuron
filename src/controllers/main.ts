@@ -10,9 +10,23 @@ import type {
     DBCreateMessage,
     DBMessage 
 } from "../models/db";
-import { SimpleInMemoryResource } from "../storage/in_memory";
+// import { SimpleInMemoryResource } from "../storage/in_memory";
 import { AUTH_PREFIX, createAuthApp } from "./auth"
 import { CHAT_PREFIX, createChatApp } from "./chat";
+import {env} from 'cloudflare:workers'
+import {UserSQLResource} from "../storage/sql";
+import {MessageSQLResource} from "../storage/sql";
+import {ChatSQLResource} from "../storage/sql";
+
+export function createSQLApp(){
+    return createMainApp(
+        createAuthApp(new UserSQLResource(env.DB)),
+        createChatApp(
+            new ChatSQLResource(env.DB),
+            new MessageSQLResource(env.DB)
+        )
+    );
+}
 
 export function createMainApp(
     authApp: Hono<ContextVariables>,
@@ -28,12 +42,12 @@ export function createMainApp(
     return app;
 }
 
-export function createInMemoryApp(){
-    return createMainApp(
-        createAuthApp(new SimpleInMemoryResource<DBUser, DBCreateUser>()),
-        createChatApp(
-            new SimpleInMemoryResource<DBChat, DBCreateChat>(),
-            new SimpleInMemoryResource<DBMessage, DBCreateMessage>(),
-        )
-    );        
-}
+// export function createInMemoryApp(){
+//     return createMainApp(
+//         createAuthApp(new SimpleInMemoryResource<DBUser, DBCreateUser>()),
+//         createChatApp(
+//             new SimpleInMemoryResource<DBChat, DBCreateChat>(),
+//             new SimpleInMemoryResource<DBMessage, DBCreateMessage>(),
+//         )
+//     );        
+// }
